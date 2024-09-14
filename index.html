@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta
       name="viewport"
-      content="width=device-width,initial-scale=1,user-scalable=no"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
     />
     <title>Choices</title>
     <meta
@@ -33,7 +33,7 @@
     <link
       rel="mask-icon"
       href="assets/images/safari-pinned-tab.svg"
-      color="#00bcd4"
+      color="#005F75"
     />
     <link rel="shortcut icon" href="assets/images/favicon.ico" />
     <meta
@@ -47,7 +47,7 @@
     <!-- End ignore these -->
 
     <!-- Optional includes -->
-    <script src="https://cdn.polyfill.io/v3/polyfill.min.js?features=Array.from%2Ces5%2Ces6%2CSymbol%2CSymbol.iterator%2CDOMTokenList%2CObject.assign%2CCustomEvent%2CElement.prototype.classList%2CElement.prototype.closest%2CElement.prototype.dataset%2CArray.prototype.find%2CArray.prototype.includes%2Cfetch"></script>
+    <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?version=4.8.0&features=Array.from%2CArray.prototype.find%2CArray.prototype.includes%2CSymbol%2CSymbol.iterator%2CDOMTokenList%2CObject.assign%2CCustomEvent%2CElement.prototype.classList%2CElement.prototype.closest%2CElement.prototype.dataset%2CElement.prototype.replaceChildren%2Cfetch"></script>
     <!-- End optional includes -->
 
     <!-- Choices includes -->
@@ -477,6 +477,7 @@
           <option value="Michigan">Michigan</option>
         </select>
 
+        <div data-test-hook="custom-templates">
         <label for="choices-single-custom-templates">Custom templates</label>
         <select
           class="form-control"
@@ -488,6 +489,7 @@
           <option value="Ember">Ember</option>
           <option value="Vue">Vue</option>
         </select>
+        </div>
 
         <p>
           Below is an example of how you could have two select inputs depend on
@@ -519,7 +521,8 @@
         <hr />
         <h2>Form interaction</h2>
         <p>Change the values and press reset to restore to initial state.</p>
-        <form>
+        <form data-test-hook="reset-form" style="margin-bottom:0">
+          <div data-test-hook="reset-simple">
           <label for="reset-simple">Change me!</label>
           <select class="form-control" name="reset-simple" id="reset-simple">
             <option value="Option 1">Option 1</option>
@@ -528,6 +531,7 @@
             <option value="Option 4">Option 4</option>
             <option value="Option 5">Option 5</option>
           </select>
+          </div>
 
           <label for="reset-multiple">And me!</label>
           <select
@@ -746,7 +750,7 @@
         var singleNoSearch = new Choices('#choices-single-no-search', {
           allowHTML: true,
           searchEnabled: false,
-          removeItemButton: true,
+            removeItemButton: true,
           choices: [
             { value: 'One', label: 'Label One' },
             { value: 'Two', label: 'Label Two', disabled: true },
@@ -841,9 +845,11 @@
           document.getElementById('choices-single-custom-templates'),
           {
             allowHTML: true,
-            callbackOnCreateTemplates: function(strToEl) {
+            position: 'bottom',
+            callbackOnCreateTemplates: function(strToEl, escapeForTemplate) {
               var classNames = this.config.classNames;
               var itemSelectText = this.config.itemSelectText;
+              var allowHTML = this.config.allowHTML;
               return {
                 item: function({ classNames }, data) {
                   return strToEl(
@@ -859,11 +865,12 @@
                       ) +
                       '"\
                   data-item\
+                  role="option"\
                   data-id="' +
                       String(data.id) +
                       '"\
                   data-value="' +
-                      String(data.value) +
+                      String(escapeForTemplate(allowHTML, data.value)) +
                       '"\
                   ' +
                       String(data.active ? 'aria-selected="true"' : '') +
@@ -873,7 +880,7 @@
                       '\
                   >\
                   <span style="margin-right:10px;">🎉</span> ' +
-                      String(data.label) +
+                      String(escapeForTemplate(allowHTML, data.label)) +
                       '\
                 </div>\
               '
@@ -909,7 +916,7 @@
                       String(data.id) +
                       '"\
                   data-value="' +
-                      String(data.value) +
+                      String(escapeForTemplate(allowHTML, data.value)) +
                       '"\
                   ' +
                       String(
@@ -918,7 +925,7 @@
                       '\
                   >\
                   <span style="margin-right:10px;">👉🏽</span> ' +
-                      String(data.label) +
+                      String(escapeForTemplate(allowHTML, data.label)) +
                       '\
                 </div>\
               '
@@ -942,6 +949,7 @@
 
     <!-- Google Analytics - Ignore me -->
     <script>
+      try {
       window.ga =
         window.ga ||
         function() {
@@ -950,6 +958,9 @@
       ga.l = +new Date();
       ga('create', 'UA-31575166-1', 'auto');
       ga('send', 'pageview');
+      } catch (e) {
+        console.log(e);
+      }
     </script>
     <script async src="https://www.google-analytics.com/analytics.js"></script>
     <!-- End Google Analytics -->
