@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta
       name="viewport"
-      content="width=device-width,initial-scale=1,user-scalable=no"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
     />
     <title>Choices</title>
     <meta
@@ -33,7 +33,7 @@
     <link
       rel="mask-icon"
       href="../../assets/images/safari-pinned-tab.svg"
-      color="#00bcd4"
+      color="#005F75"
     />
     <link rel="shortcut icon" href="../../assets/images/favicon.ico" />
     <meta
@@ -48,7 +48,7 @@
 
     <!-- Choices includes -->
     <link rel="stylesheet" href="../../assets/styles/choices.min.css" />
-    <script src="../../assets/scripts/choices.min.js"></script>
+    <script src="../../assets/scripts/choices.js"></script>
     <!-- End Choices includes -->
   </head>
 
@@ -66,6 +66,24 @@
             <option value="Find me">Choice 3</option>
             <option value="Choice 4">Choice 4</option>
           </select>
+          <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              const choicesBasic = new Choices('#choices-basic', {
+                allowHTML: true,
+              });
+              document
+                .querySelector('button.disable')
+                .addEventListener('click', () => {
+                  choicesBasic.disable();
+                });
+
+              document
+                .querySelector('button.enable')
+                .addEventListener('click', () => {
+                  choicesBasic.enable();
+                });
+            });
+          </script>
         </div>
 
         <div data-test-hook="remove-button">
@@ -80,6 +98,65 @@
             <option value="Choice 3">Choice 3</option>
             <option value="Choice 4">Choice 4</option>
           </select>
+
+          <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              new Choices('#choices-remove-button', {
+                allowHTML: true,
+                removeItemButton: true,
+              });
+            });
+          </script>
+        </div>
+
+        <div data-test-hook="no-press-to-select">
+          <label for="no-press-to-select">No press to select</label>
+          <select
+            class="form-control"
+            name="no-press-to-select"
+            id="no-press-to-select"
+          >
+            <option value="Choice 1">Choice 1</option>
+            <option value="Choice 2">Choice 2</option>
+            <option value="Choice 3">Choice 3</option>
+            <option value="Choice 4">Choice 4</option>
+          </select>
+
+          <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              new Choices('#no-press-to-select', {
+                allowHTML: true,
+                itemSelectText: '',
+              });
+            });
+          </script>
+        </div>
+
+        <div data-test-hook="no-choices">
+          <label for="no-choices">No choices</label>
+          <select class="form-control" name="no-choices" id="no-choices">
+          </select>
+          <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              new Choices('#no-choices', {
+                allowHTML: true,
+              });
+            });
+          </script>
+        </div>
+
+        <div data-test-hook="no-choices2">
+          <label for="no-choices2">No choices (besides selected)</label>
+          <select class="form-control" name="no-choices" id="no-choices2">
+            <option value="Choice 1">Choice 1</option>
+          </select>
+          <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              new Choices('#no-choices2', {
+                allowHTML: true,
+              });
+            });
+          </script>
         </div>
 
         <div data-test-hook="disabled-choice">
@@ -94,6 +171,14 @@
             <option value="Choice 3">Choice 3</option>
             <option value="Choice 4" disabled>Choice 4</option>
           </select>
+          <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              new Choices('#choices-disabled-choice', {
+                allowHTML: true,
+                removeItemButton: true,
+              });
+            });
+          </script>
         </div>
 
         <div data-test-hook="disabled-first-choice-via-options">
@@ -106,19 +191,55 @@
             id="choices-disabled-choice-via-options"
           >
           </select>
+          <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              new Choices('#choices-disabled-choice-via-options', {
+                allowHTML: true,
+                removeItemButton: true,
+                choices: [
+                  {
+                    value: 'Choice 1',
+                    label: 'Choice 1',
+                    disabled: true,
+                  },
+                  {
+                    value: 'Choice 2',
+                    label: 'Choice 2',
+                  },
+                  {
+                    value: 'Choice 3',
+                    label: 'Choice 3',
+                  },
+                  {
+                    value: 'Choice 4',
+                    label: 'Choice 4',
+                  },
+                ],
+              });
+            });
+          </script>
         </div>
 
-        <div data-test-hook="add-items-disabled">
-          <label for="choices-add-items-disabled">Add items disabled</label>
+        <div data-test-hook="disabled-via-fieldset">
+          <fieldset disabled>
+          <label for="choices-disabled-via-attr">Disabled via fieldset</label>
           <select
             class="form-control"
-            name="choices-add-items-disabled"
-            id="choices-add-items-disabled"
+            name="choices-disabled-via-fieldset"
+            id="choices-disabled-via-fieldset"
           >
             <option value="Choice 1" selected>Choice 1</option>
             <option value="Choice 2">Choice 2</option>
             <option value="Choice 3">Choice 3</option>
           </select>
+          </fieldset>
+          <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              new Choices('#choices-disabled-via-fieldset', {
+                allowHTML: true,
+              });
+            });
+          </script>
         </div>
 
         <div data-test-hook="disabled-via-attr">
@@ -133,6 +254,13 @@
             <option value="Choice 2">Choice 2</option>
             <option value="Choice 3">Choice 3</option>
           </select>
+          <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              new Choices('#choices-disabled-via-attr', {
+                allowHTML: true,
+              });
+            });
+          </script>
         </div>
 
         <div data-test-hook="prepend-append">
@@ -146,6 +274,15 @@
             <option value="Choice 2">Choice 2</option>
             <option value="Choice 3">Choice 3</option>
           </select>
+          <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              new Choices('#choices-prepend-append', {
+                allowHTML: true,
+                prependValue: 'before-',
+                appendValue: '-after',
+              });
+            });
+          </script>
         </div>
 
         <div data-test-hook="render-choice-limit">
@@ -159,6 +296,14 @@
             <option value="Choice 2">Choice 2</option>
             <option value="Choice 3">Choice 3</option>
           </select>
+          <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              new Choices('#choices-render-choice-limit', {
+                allowHTML: true,
+                renderChoiceLimit: 1,
+              });
+            });
+          </script>
         </div>
 
         <div data-test-hook="search-disabled">
@@ -172,6 +317,14 @@
             <option value="Choice 2">Choice 2</option>
             <option value="Choice 3">Choice 3</option>
           </select>
+          <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              new Choices('#choices-search-disabled', {
+                allowHTML: true,
+                searchEnabled: false,
+              });
+            });
+          </script>
         </div>
 
         <div data-test-hook="search-floor">
@@ -185,6 +338,14 @@
             <option value="Choice 2">Choice 2</option>
             <option value="Choice 3">Choice 3</option>
           </select>
+          <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              new Choices('#choices-search-floor', {
+                allowHTML: true,
+                searchFloor: 5,
+              });
+            });
+          </script>
         </div>
 
         <div data-test-hook="placeholder-via-option-value">
@@ -201,6 +362,13 @@
             <option value="Choice 2">Choice 2</option>
             <option value="Choice 3">Choice 3</option>
           </select>
+          <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              new Choices('#choices-placeholder-via-option-value', {
+                allowHTML: true,
+              });
+            });
+          </script>
         </div>
 
         <div data-test-hook="placeholder-via-option-attr">
@@ -217,6 +385,37 @@
             <option value="Choice 2">Choice 2</option>
             <option value="Choice 3">Choice 3</option>
           </select>
+          <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              new Choices('#choices-placeholder-via-option-attr', {
+                allowHTML: true,
+              });
+            });
+          </script>
+        </div>
+
+        <div data-test-hook="placeholder-via-data-attr">
+          <label for="choices-placeholder-via-data-attr"
+          >Placeholder via data attribute</label
+          >
+          <select
+            class="form-control"
+            name="choices-placeholder-via-data-attr"
+            id="choices-placeholder-via-data-attr"
+            data-placeholder="I am a placeholder"
+          >
+            <option value="">I am a not placeholder</option>
+            <option value="Choice 1">Choice 1</option>
+            <option value="Choice 2">Choice 2</option>
+            <option value="Choice 3">Choice 3</option>
+          </select>
+          <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              new Choices('#choices-placeholder-via-data-attr', {
+                allowHTML: true,
+              });
+            });
+          </script>
         </div>
 
         <div data-test-hook="remote-data">
@@ -228,6 +427,22 @@
           >
             <option value="">I am a placeholder</option>
           </select>
+          <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              new Choices('#choices-remote-data', {
+                allowHTML: true,
+                shouldSort: false,
+              }).setChoices(async () => {
+                try {
+                  const data = await fetch('../data.json');
+                  return data.json();
+                } catch (e) {
+                  console.log(e);
+                  return [];
+                }
+              });
+            });
+          </script>
         </div>
 
         <div data-test-hook="scrolling-dropdown">
@@ -253,6 +468,14 @@
             <option value="Choice 14">Choice 14</option>
             <option value="Choice 15">Choice 15</option>
           </select>
+          <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              new Choices('#choices-scrolling-dropdown', {
+                allowHTML: true,
+                shouldSort: false,
+              });
+            });
+          </script>
         </div>
 
         <div data-test-hook="groups">
@@ -261,7 +484,6 @@
             class="form-control"
             name="choices-groups"
             id="choices-groups"
-            multiple
           >
             <optgroup label="UK">
               <option value="London">London</option>
@@ -274,6 +496,37 @@
               <option value="Marseille">Marseille</option>
             </optgroup>
           </select>
+          <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              new Choices('#choices-groups', {
+                allowHTML: true,
+              });
+            });
+          </script>
+        </div>
+
+        <div data-test-hook="mixed-groups">
+          <label for="mixed-choices-groups"
+          >Choice groups with some elements without a group</label
+          >
+          <select
+            class="form-control"
+            name="mixed-choices-groups"
+            id="mixed-choices-groups"
+          >
+            <optgroup label="UK">
+              <option value="London">London</option>
+            </optgroup>
+            <option value="Paris">Paris</option>
+            <option value="Lyon">Lyon</option>
+          </select>
+          <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              new Choices('#mixed-choices-groups', {
+                allowHTML: false,
+              });
+            });
+          </script>
         </div>
 
         <div data-test-hook="parent-child">
@@ -294,6 +547,24 @@
             <option value="Child choice 2">Child choice 2</option>
             <option value="Child choice 3">Child choice 3</option>
           </select>
+          <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              const parent = new Choices('#choices-parent', {
+                allowHTML: true,
+              });
+              const child = new Choices('#choices-child', {
+                allowHTML: true,
+              }).disable();
+
+              parent.passedElement.element.addEventListener('change', event => {
+                if (event.detail.value === 'Parent choice 2') {
+                  child.enable();
+                } else {
+                  child.disable();
+                }
+              });
+            });
+          </script>
         </div>
 
         <div data-test-hook="custom-properties">
@@ -303,6 +574,40 @@
             name="choices-custom-properties"
             id="choices-custom-properties"
           ></select>
+          <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              new Choices('#choices-custom-properties', {
+                allowHTML: true,
+                searchFields: ['label', 'value', 'customProperties.country'],
+                choices: [
+                  {
+                    id: 1,
+                    value: 'London',
+                    label: 'London',
+                    customProperties: {
+                      country: 'United Kingdom',
+                    },
+                  },
+                  {
+                    id: 2,
+                    value: 'Berlin',
+                    label: 'Berlin',
+                    customProperties: {
+                      country: 'Germany',
+                    },
+                  },
+                  {
+                    id: 3,
+                    value: 'Lisbon',
+                    label: 'Lisbon',
+                    customProperties: {
+                      country: 'Portugal',
+                    },
+                  },
+                ],
+              });
+            });
+          </script>
         </div>
 
         <div data-test-hook="custom-properties-html">
@@ -325,6 +630,14 @@
               >Label Four</option
             >
           </select>
+          <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              new Choices('#choices-custom-properties-html', {
+                allowHTML: true,
+                searchFields: ['label', 'value', 'customProperties'],
+              });
+            });
+          </script>
         </div>
 
         <div data-test-hook="non-string-values">
@@ -334,6 +647,37 @@
             name="choices-non-string-values"
             id="choices-non-string-values"
           ></select>
+          <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              new Choices('#choices-non-string-values', {
+                allowHTML: true,
+                choices: [
+                  {
+                    id: 1,
+                    label: 'Number',
+                    value: 1,
+                  },
+                  {
+                    id: 2,
+                    label: 'Boolean',
+                    value: true,
+                  },
+                  {
+                    id: 3,
+                    label: 'Object',
+                    value: {
+                      test: true,
+                    },
+                  },
+                  {
+                    id: 4,
+                    label: 'Array',
+                    value: ['test'],
+                  },
+                ],
+              });
+            });
+          </script>
         </div>
 
         <div data-test-hook="within-form">
@@ -345,8 +689,16 @@
               id="choices-within-form"
             >
               <option value="Choice 1">Choice 1</option>
+              <option value="Choice 2">Choice 2</option>
             </select>
           </form>
+          <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              new Choices('#choices-within-form', {
+                allowHTML: true,
+              });
+            });
+          </script>
         </div>
 
         <div data-test-hook="set-choice-by-value">
@@ -362,6 +714,13 @@
             <option value="Choice 2">Choice 2</option>
             <option value="Choice 3">Choice 3</option>
           </select>
+          <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              new Choices('#choices-set-choice-by-value', {
+                allowHTML: true,
+              }).setChoiceByValue('Choice 2');
+            });
+          </script>
         </div>
 
         <div data-test-hook="search-by-label">
@@ -374,33 +733,133 @@
             <option value="value1">label1</option>
             <option value="value2">label2</option>
           </select>
+          <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              new Choices('#choices-search-by-label', {
+                allowHTML: true,
+                searchFields: ['label']
+              });
+            });
+          </script>
         </div>
 
         <div data-test-hook="allowhtml-undefined">
-          <label for="choices-allowhtml-undefined">HTML allowed by default</label>
+          <label for="choices-allowhtml-undefined">HTML disabled by default (adds choices)</label>
           <select
             class="form-control"
             name="choices-allowhtml-undefined"
             id="choices-allowhtml-undefined"
           ></select>
+          <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              new Choices('#choices-allowhtml-undefined', {
+                addChoices: true,
+                choices: [
+                  {
+                    id: 1,
+                    label: '<b>Choice 1</b>',
+                    value: 'Choice 1',
+                  },
+                  {
+                    id: 2,
+                    label: 'Choice 2',
+                    value: 'Choice 2',
+                  },
+                ],
+              });
+            });
+          </script>
         </div>
 
         <div data-test-hook="allowhtml-true">
-          <label for="choices-allowhtml-true">HTML allowed</label>
+          <label for="choices-allowhtml-true">HTML allowed (adds choices)</label>
           <select
             class="form-control"
             name="choices-allowhtml-true"
             id="choices-allowhtml-true"
           ></select>
+          <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              new Choices('#choices-allowhtml-true', {
+                allowHTML: true,
+                allowHtmlUserInput: true,
+                addChoices: true,
+                choices: [
+                  {
+                    id: 1,
+                    label: '<b>Choice 1</b>',
+                    value: 'Choice 1',
+                  },
+                  {
+                    id: 2,
+                    label: 'Choice 2',
+                    value: 'Choice 2',
+                  },
+                ],
+              });
+
+            });
+          </script>
+        </div>
+
+        <div data-test-hook="allowhtml-true-userinput-false">
+          <label for="choices-allowhtml-true-userinput-false">HTML allowed (except user input, adds choices)</label>
+          <select
+            class="form-control"
+            name="choices-allowhtml-true-userinput-false"
+            id="choices-allowhtml-true-userinput-false"
+          ></select>
+          <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              new Choices('#choices-allowhtml-true-userinput-false', {
+                allowHTML: true,
+                allowHtmlUserInput: false,
+                addChoices: true,
+                choices: [
+                  {
+                    id: 1,
+                    label: '<b>Choice 1</b>',
+                    value: 'Choice 1',
+                  },
+                  {
+                    id: 2,
+                    label: 'Choice 2',
+                    value: 'Choice 2',
+                  },
+                ],
+              });
+            });
+          </script>
         </div>
 
         <div data-test-hook="allowhtml-false">
-          <label for="choices-allowhtml-false">HTML disabled</label>
+          <label for="choices-allowhtml-false">HTML disabled (adds choices)</label>
           <select
             class="form-control"
             name="choices-allowhtml-false"
             id="choices-allowhtml-false"
           ></select>
+          <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              new Choices('#choices-allowhtml-false', {
+                allowHTML: false,
+                allowHtmlUserInput: false,
+                addChoices: true,
+                choices: [
+                  {
+                    id: 1,
+                    label: '<b>Choice 1</b>',
+                    value: 'Choice 1',
+                  },
+                  {
+                    id: 2,
+                    label: 'Choice 2',
+                    value: 'Choice 2',
+                  },
+                ],
+              });
+            });
+          </script>
         </div>
 
         <div data-test-hook="new-destroy-init">
@@ -411,284 +870,105 @@
             id="choices-new-destroy-init"
           >
             <option value="Choice 1">Choice 1</option>
-            <option value="Choice 2">Choice 2</option>
+            <optgroup label="test">
+              <option value="Choice 2">Choice 2</option>
+            </optgroup>
             <option value="Choice 3">Choice 3</option>
           </select>
           <button class="destroy">Destroy</button>
           <button class="init">Init</button>
+          <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              const newDestroyInitChoices = new Choices('#choices-new-destroy-init', {
+                allowHTML: true,
+              });
+              document
+                .querySelector('button.destroy')
+                .addEventListener('click', () => {
+                  newDestroyInitChoices.destroy();
+                });
+              document.querySelector('button.init').addEventListener('click', () => {
+                newDestroyInitChoices.init();
+              });
+            });
+          </script>
         </div>
 
-        <div data-test-hook="add-choices">
-          <label for="choices-add-choices">Add choices</label>
-          <select class="form-control" name="choices-add-choices" id="choices-add-choices">
+        <div data-test-hook="shadow-dom">
+          <noscript style="display:none;">
+          <link rel="stylesheet" href="../../assets/styles/base.min.css" />
+          <link rel="stylesheet" href="../../assets/styles/choices.min.css" />
+          <script src="../../assets/scripts/choices.min.js"></script>
+          <label for="shadow-dom-choices-basic">Shadow DOM - Basic</label>
+          <button class="disable push-bottom">Disable</button>
+          <button class="enable push-bottom">Enable</button>
+          <select class="form-control" name="shadow-dom-choices-basic" id="shadow-dom-choices-basic">
             <option value="Choice 1">Choice 1</option>
             <option value="Choice 2">Choice 2</option>
-            <option value="Choice 3">Choice 3</option>
+            <option value="Find me">Choice 3</option>
+            <option value="Choice 4">Choice 4</option>
           </select>
-        </div>
+          </noscript>
+          <div data-shadow-dom></div>
+          <script>
+            document.addEventListener('DOMContentLoaded', function() {
+              const shadowDomTest = document.querySelector('div[data-test-hook="shadow-dom"]'),
+                payload = shadowDomTest.querySelector('noscript'),
+                shadowDomHtml = payload.innerHTML,
+                shadowDomWrapper = shadowDomTest.querySelector('div[data-shadow-dom]');
+              payload.innerHTML = ''; // ensure the shadow-dom example is not part of the main document
+              const shadowRoot = shadowDomWrapper.attachShadow({ mode: 'open' });
+              shadowRoot.innerHTML = shadowDomHtml;
+
+              new Choices('#shadow-dom-choices-basic', {
+                allowHTML: false,
+                shadowRoot: shadowRoot,
+              });
+            });
+          </script>
+      </div>
+
+        <div data-test-hook="autocomplete">
+        <label for="choices-autocomplete">Autocomplete example</label>
+        <select
+          class="form-control"
+          name="choices-autocomplete"
+          id="choices-autocomplete"
+        >
+        </select>
+        <script>
+          document.addEventListener('DOMContentLoaded', function() {
+            const choices = new Choices('#choices-autocomplete', {
+              shouldSort: false,
+            });
+            choices.passedElement.element.addEventListener(
+              'search',
+              function(e) {
+                const query = e.detail.value
+
+                if (query.length < 2) {
+                  choices.clearChoices()
+                  return
+                }
+
+                let result = []
+                if (query.slice(0, 2) === 'fo') {
+                  result = [{ value: 'found', label: 'Found' }]
+                }
+
+                choices.setChoices(
+                  result,
+                  'value',
+                  'label',
+                  true
+                )
+              }
+            )
+          });
+        </script>
+      </div>
 
       </div>
     </div>
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const choicesBasic = new Choices('#choices-basic', {
-          allowHTML: true,
-        });
-
-        document
-          .querySelector('button.disable')
-          .addEventListener('click', () => {
-            choicesBasic.disable();
-          });
-
-        document
-          .querySelector('button.enable')
-          .addEventListener('click', () => {
-            choicesBasic.enable();
-          });
-
-        new Choices('#choices-remove-button', {
-          allowHTML: true,
-          removeItemButton: true,
-        });
-
-        new Choices('#choices-disabled-choice', {
-          allowHTML: true,
-          removeItemButton: true,
-        });
-
-        new Choices('#choices-disabled-choice-via-options', {
-          allowHTML: true,
-          removeItemButton: true,
-          choices: [
-            {
-              value: 'Choice 1',
-              label: 'Choice 1',
-              disabled: true,
-            },
-            {
-              value: 'Choice 2',
-              label: 'Choice 2',
-            },
-            {
-              value: 'Choice 3',
-              label: 'Choice 3',
-            },
-            {
-              value: 'Choice 4',
-              label: 'Choice 4',
-            },
-          ],
-        });
-
-        new Choices('#choices-add-items-disabled', {
-          allowHTML: true,
-          addItems: false,
-        });
-
-        new Choices('#choices-disabled-via-attr', {
-          allowHTML: true,
-        });
-
-        new Choices('#choices-prepend-append', {
-          allowHTML: true,
-          prependValue: 'before-',
-          appendValue: '-after',
-        });
-
-        new Choices('#choices-render-choice-limit', {
-          allowHTML: true,
-          renderChoiceLimit: 1,
-        });
-
-        new Choices('#choices-search-disabled', {
-          allowHTML: true,
-          searchEnabled: false,
-        });
-
-        new Choices('#choices-search-floor', {
-          allowHTML: true,
-          searchFloor: 5,
-        });
-
-        new Choices('#choices-placeholder-via-option-value', {
-          allowHTML: true,
-        });
-
-        new Choices('#choices-placeholder-via-option-attr', {
-          allowHTML: true,
-        });
-
-        new Choices('#choices-remote-data', {
-          allowHTML: true,
-          shouldSort: false,
-        }).setChoices(async () => {
-          const res = await fetch('/data');
-          return res.json();
-        });
-
-        new Choices('#choices-scrolling-dropdown', {
-          allowHTML: true,
-          shouldSort: false,
-        });
-
-        new Choices('#choices-groups', {
-          allowHTML: true,
-        });
-
-        const parent = new Choices('#choices-parent', {
-          allowHTML: true,
-        });
-        const child = new Choices('#choices-child', {
-          allowHTML: true,
-        }).disable();
-
-        parent.passedElement.element.addEventListener('change', event => {
-          if (event.detail.value === 'Parent choice 2') {
-            child.enable();
-          } else {
-            child.disable();
-          }
-        });
-
-        new Choices('#choices-custom-properties', {
-          allowHTML: true,
-          searchFields: ['label', 'value', 'customProperties.country'],
-          choices: [
-            {
-              id: 1,
-              value: 'London',
-              label: 'London',
-              customProperties: {
-                country: 'United Kingdom',
-              },
-            },
-            {
-              id: 2,
-              value: 'Berlin',
-              label: 'Berlin',
-              customProperties: {
-                country: 'Germany',
-              },
-            },
-            {
-              id: 3,
-              value: 'Lisbon',
-              label: 'Lisbon',
-              customProperties: {
-                country: 'Portugal',
-              },
-            },
-          ],
-        });
-
-        new Choices('#choices-custom-properties-html', {
-          allowHTML: true,
-          searchFields: ['label', 'value', 'customProperties'],
-        });
-
-        new Choices('#choices-non-string-values', {
-          allowHTML: true,
-          choices: [
-            {
-              id: 1,
-              label: 'Number',
-              value: 1,
-            },
-            {
-              id: 2,
-              label: 'Boolean',
-              value: true,
-            },
-            {
-              id: 3,
-              label: 'Object',
-              value: {
-                test: true,
-              },
-            },
-            {
-              id: 4,
-              label: 'Array',
-              value: ['test'],
-            },
-          ],
-        });
-
-        new Choices('#choices-within-form', {
-          allowHTML: true,
-        });
-
-        new Choices('#choices-set-choice-by-value', {
-          allowHTML: true,
-        }).setChoiceByValue('Choice 2');
-
-        new Choices('#choices-search-by-label', {
-          allowHTML: true,
-          searchFields: ['label']
-        });
-
-        new Choices('#choices-allowhtml-undefined', {
-          choices: [
-            {
-              id: 1,
-              label: '<b>Choice 1</b>',
-              value: 'Choice 1',
-            },
-            {
-              id: 2,
-              label: 'Choice 2',
-              value: 'Choice 2',
-            },
-          ],
-        });
-
-        new Choices('#choices-allowhtml-true', {
-          allowHTML: true,
-          choices: [
-            {
-              id: 1,
-              label: '<b>Choice 1</b>',
-              value: 'Choice 1',
-            },
-            {
-              id: 2,
-              label: 'Choice 2',
-              value: 'Choice 2',
-            },
-          ],
-        });
-
-        new Choices('#choices-allowhtml-false', {
-          allowHTML: false,
-          choices: [
-            {
-              id: 1,
-              label: '<b>Choice 1</b>',
-              value: 'Choice 1',
-            },
-            {
-              id: 2,
-              label: 'Choice 2',
-              value: 'Choice 2',
-            },
-          ],
-        });
-
-        const newDestroyInitChoices = new Choices('#choices-new-destroy-init', {
-          allowHTML: true,
-        });
-        document
-          .querySelector('button.destroy')
-          .addEventListener('click', () => {
-            newDestroyInitChoices.destroy();
-          });
-        document.querySelector('button.init').addEventListener('click', () => {
-          newDestroyInitChoices.init();
-        });
-
-        new Choices('#choices-add-choices', { addChoices: true });
-      });
-    </script>
   </body>
 </html>

@@ -1,0 +1,15 @@
+# byte shaving (hoist semi-commonly variables, remove some low level low-usage functions)
+157a47a44a01e3ce4b54ad211b1756ff59985bef
+5bee41d7ff08e05442b232e3e552dcb6c703568d
+e9382df0ae63edfc7540f82f74cf969342c759c0
+
+# prettier config change
+00433d200d8cccc8b544fbc8f05d5e96bf8ccff7
+
+# misc linting cleanup
+00009d2effa8b41a6ce27ef8b06a35a04215aea6
+62b786d1f13d0934137a62909d3a37db0a3e927e
+5ad61841143508c9f91f0edd57f81f8b11066e0a
+84a61cad1ddab1e851c98efa619a2cd35af434c1
+33f573247e8badc9ee10defe326f13985342e09b
+b0199538a82d49de429f35546e412d14fc8bfeb9

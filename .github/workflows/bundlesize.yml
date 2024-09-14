@@ -1,8 +1,17 @@
 name: Bundle size checks
 
 on:
+  push:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/bundlesize.yml'
+      - 'src/scripts/**'
+      - 'src/styles/**'
+      - 'package-lock.json'
+      - '.browserslistrc'
   pull_request:
     paths:
+      - '.github/workflows/bundlesize.yml'
       - 'src/scripts/**'
       - 'src/styles/**'
       - 'package-lock.json'
@@ -12,28 +21,29 @@ jobs:
   measure:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
+          cache: 'npm'
 
-      - name: Install dependencies and build
-        run: |
-          npm ci
-          npm run build
+      - name: Install dependencies
+        run: npm ci --no-audit
         env:
-          CYPRESS_INSTALL_BINARY: 0
           HUSKY_SKIP_INSTALL: true
+
+      - run: npm run build
 
       # we don't need to build here, as even minized assets expected to be commited
 
-      - run: npx bundlesize
+      - run: npm run bundlesize
         env:
-          CI: true
-          BUNDLESIZE_GITHUB_TOKEN: ${{secrets.BUNDLESIZE_GITHUB_TOKEN}}
+          # token has expired, don't block the test
+          #CI: true
+          #BUNDLESIZE_GITHUB_TOKEN: ${{secrets.BUNDLESIZE_GITHUB_TOKEN}}
           CI_REPO_NAME: ${{ github.event.repository.name }}
           CI_REPO_OWNER: ${{ github.event.organization.login }}
           CI_COMMIT_SHA: ${{ github.event.after }}

@@ -10,15 +10,17 @@
   ],
   "env": {
     "es6": true,
-    "browser": true,
-    "mocha": true,
-    "cypress/globals": true
+    "node": true,
+    "browser": true
   },
   "parserOptions": {
-    "project": "./tsconfig.json",
-    "ecmaVersion": 2020
+    "sourceType": "module",
+    "project": true
   },
   "rules": {
+    "no-param-reassign": ["error", { "props": false }],
+    "@typescript-eslint/explicit-function-return-type": "error",
+    "import/no-named-as-default": "off",
     "import/prefer-default-export": "off",
     "import/no-extraneous-dependencies": [
       "error",
@@ -62,16 +64,27 @@
       }
     ],
     "lines-between-class-members": "off",
+    "@typescript-eslint/no-floating-promises": "error",
     "@typescript-eslint/no-namespace": "off",
-    "react/jsx-filename-extension": [0]
+    "react/jsx-filename-extension": [0],
+    "import/extensions": [
+      "error",
+      "ignorePackages",
+      {
+        "js": "never",
+        "mjs": "never",
+        "jsx": "never",
+        "ts": "never",
+        "tsx": "never"
+      }
+    ]
   },
   "overrides": [
     {
-      "files": ["*.test.ts"],
-      "env": {
-        "mocha": true
-      },
+      "files": ["*.test.ts", "*.spec.ts"],
       "rules": {
+        "no-await-in-loop": "off",
+        "@typescript-eslint/explicit-function-return-type": "off",
         "no-restricted-syntax": "off",
         "compat/compat": "off",
         "no-new": "off",
@@ -88,16 +101,6 @@
           }
         ]
       }
-    },
-    {
-      "files": ["cypress/**"],
-      "plugins": ["cypress"],
-      "rules": {
-        "no-unused-vars": "warn"
-      },
-      "env": {
-        "cypress/globals": true
-      }
     }
   ],
   "settings": {
@@ -112,12 +115,14 @@
       "CustomEvent",
       "Element.prototype.classList",
       "Element.prototype.closest",
-      "Element.prototype.dataset"
+      "Element.prototype.dataset",
+      "Element.prototype.replaceChildren"
     ],
     "import/resolver": {
       "node": {
         "extensions": [".js", ".ts"]
       }
     }
-  }
+  },
+  "ignorePatterns": ["node_modules/*", "public/*"]
 }

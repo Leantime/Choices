@@ -3,18 +3,18 @@ name: Deploy Pages
 on:
   release:
     types: [published]
-  workflow_dispatch: 
-    
+  workflow_dispatch:
+
 jobs:
   deploy-gh-pages:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
           registry-url: https://registry.npmjs.org/
       - name: Build
         run: |
@@ -22,10 +22,9 @@ jobs:
           npm run build
           rm -rf public/test
         env:
-          CYPRESS_INSTALL_BINARY: 0
           HUSKY_SKIP_INSTALL: true
       - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v4
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PUBLISH_BRANCH: gh-pages

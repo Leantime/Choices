@@ -78,10 +78,5 @@
       "script": "test:unit",
       "group": "test"
     },
-    {
-      "type": "npm",
-      "script": "cypress:open",
-      "isBackground": true
-    }
   ]
 }

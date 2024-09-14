@@ -1,131 +1,107 @@
-name: Browsers
-
+name: End-to-end tests (playwright)
 on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'src/**'
+      - 'test-e2e/**'
+      - 'package-lock.json'
+      - '.browserslistrc'
+      - 'babel.config.json'
+      - 'public/index.html'
+      - 'public/**/index.html'
+      - '.github/workflows/browsers.yml'
+      - 'playwright.config.ts'
   pull_request:
     paths:
       - 'src/**'
+      - 'test-e2e/**'
       - 'package-lock.json'
       - '.browserslistrc'
-      - '.babelrc'
-      - 'webpack.config.*'
+      - 'babel.config.json'
       - 'public/index.html'
-      - '.github/actions-scripts/__snapshots__/**'
+      - 'public/**/index.html'
       - '.github/workflows/browsers.yml'
-
+      - 'playwright.config.ts'
 jobs:
-  selenium:
+  test-e2e-playwright:
+    timeout-minutes: 60
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest, macos-latest]
-        browser: [edge, firefox, safari, chrome]
+        os: [windows-latest, macos-latest, ubuntu-latest]
+        browser: [chromium, firefox, webkit]
         exclude:
           - os: windows-latest
-            browser: safari
+            browser: webkit
+          - os: windows-latest
+            browser: firefox
           - os: macos-latest
-            browser: edge
-          - os: macos-latest
-            browser: chrome
-          # Safari workaround is not working in Catalina
-          - browser: safari
-
+            browser: firefox
     runs-on: ${{ matrix.os }}
     steps:
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 1
 
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 1
-      - uses: actions/setup-node@v2
-        with:
-          node-version: 18.x
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 20
+        cache: 'npm'
 
-      - name: Cache node modules
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.OS }}-build-${{ matrix.browser }}
-          restore-keys: |
-            ${{ runner.OS }}-build-${{ env.cache-name }}-
-            ${{ runner.OS }}-build-
-            ${{ runner.OS }}-
+    - name: Install dependencies
+      run: npm ci --no-audit
+      env:
+        HUSKY_SKIP_INSTALL: true
 
-      - run: |
-          npm ci
-          npm run build
-        env:
-          CYPRESS_INSTALL_BINARY: 0
-          HUSKY_SKIP_INSTALL: true
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps
+    - run: npx playwright install-deps
 
-      # install drivers
-      - name: Enable Safari Driver
-        run: |
-          # Workaround for `sudo safardriver --enable` not working:
-          # https://github.com/web-platform-tests/wpt/issues/19845
-          # https://github.com/web-platform-tests/wpt/blob/master/tools/ci/azure/install_safari.yml
-          mkdir -p ~/Library/WebDriver/
-          curl https://raw.githubusercontent.com/web-platform-tests/wpt/master/tools/ci/azure/com.apple.Safari.plist -o ~/Library/WebDriver/com.apple.Safari.plist
-          defaults write com.apple.Safari WebKitJavaScriptCanOpenWindowsAutomatically 1
-          # sudo safaridriver --enable
-        if: matrix.browser == 'safari'
+    - name: Run Playwright tests
+      run: npx playwright test --project=${{ matrix.browser }}
+    - uses: actions/upload-artifact@v4
+      if: failure()
+      with:
+        name: screenshot-${{ matrix.os }}
+        path: test-results/**/*.png
+    - uses: actions/upload-artifact@v4
+      if: '!cancelled()'
+      with:
+        name: blob-report-${{ matrix.os }}-${{ matrix.browser }}
+        path: blob-report/
+        retention-days: 1
 
-      - run: |
-          brew install --cask firefox
-          brew install geckodriver
-        if: matrix.browser == 'firefox' && matrix.os == 'macos-latest'
+  merge-reports:
+    # Merge reports after playwright-tests, even if some shards have failed
+    if: ${{ !cancelled() }}
+    needs: [test-e2e-playwright]
 
-      - run: echo "$env:GeckoWebDriver" >> $GITHUB_PATH
-        if: matrix.browser == 'firefox' && matrix.os == 'windows-latest'
-
-      - run: echo "$env:EdgeWebDriver" >> $GITHUB_PATH
-        if: matrix.browser == 'edge' && matrix.os == 'windows-latest'
-
-      - run: echo "$env:ChromeWebDriver" >> $GITHUB_PATH
-        if: matrix.browser == 'chrome' && matrix.os == 'windows-latest'
-
-      - run: npm i --no-optional --no-audit selenium-webdriver pixelmatch pngjs
-      - run: node .github/actions-scripts/selenium.js
-        env:
-          BROWSER: ${{ matrix.browser }}
-          PORT: 0
-          NODE_ENV: production # prevent watching
-
-      - uses: actions/upload-artifact@v2
-        if: failure()
-        with:
-          name: screenshot-${{ matrix.browser }}-${{ matrix.os }}
-          path: screenshot
-
-  puppeteer:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 1
-      - name: Cache node modules
-        uses: actions/cache@v2
-        with:
-          path: ~/.npm
-          key: ${{ runner.OS }}-build-puppeteer
-          restore-keys: |
-            ${{ runner.OS }}-build-puppeteer
-      - run: |
-          npm ci
-          npm run build
-        env:
-          CYPRESS_INSTALL_BINARY: 0
-          HUSKY_SKIP_INSTALL: true
-      - run: npm i --no-optional --no-audit puppeteer pixelmatch pngjs
-      - run: node .github/actions-scripts/puppeteer.js
-        env:
-          PORT: 0
-          NODE_ENV: production # prevent watching
 
-      - uses: actions/upload-artifact@v2
-        if: failure()
+      - uses: actions/setup-node@v4
         with:
-          name: screenshot-puppeteer-darwin
-          path: screenshot
+          node-version: 20
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download blob reports from GitHub Actions Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: all-blob-reports
+          pattern: blob-report-*
+          merge-multiple: true
+
+      - name: Merge into HTML Report
+        run: npx playwright merge-reports -c test-e2e/merge.config.ts ./all-blob-reports
+
+      - name: Upload HTML report
+        uses: actions/upload-artifact@v4
+        with:
+          name: html-report--attempt-${{ github.run_attempt }}
+          path: playwright-report
+          retention-days: 30
